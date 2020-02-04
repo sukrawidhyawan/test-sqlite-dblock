@@ -1,3 +1,4 @@
+// modify from https://gist.github.com/mrnugget/0eda3b2b53a70fa4a894
 package main
 
 import (
@@ -18,7 +19,7 @@ CREATE TABLE IF NOT EXISTS users (id INTEGER PRIMARY KEY, user_name TEXT);
 CREATE TABLE IF NOT EXISTS products (id INTEGER PRIMARY KEY, product_name TEXT);
 DELETE FROM products;
 `
-	count = 10000
+	count = 1000000
 )
 
 var r *rand.Rand
@@ -111,9 +112,9 @@ func setup(db *sql.DB) {
 func read(db *sql.DB, mu *sync.Mutex, i, count int) {
 	// mu.Lock()
 	// defer mu.Unlock()
-	rows, err := db.Query(`SELECT * FROM products WHERE id = 5`)
+	rows, err := db.Query(`SELECT MAX(id) FROM products`)
 	if err != nil {
-		fmt.Printf("\nproducts select %d/%d. Query error=%s\n", i, count, err)
+		log.Fatalf("\nproducts select %d/%d. Query error=%s\n", i, count, err)
 	} else {
 		fmt.Printf(".")
 		rows.Close()
@@ -127,14 +128,12 @@ func write(db *sql.DB, mu *sync.Mutex, i, count int) {
 	go func() {
 		_, err := db.Exec(`INSERT INTO products (product_name) VALUES ("computer");`)
 		if err != nil {
-			fmt.Printf("user insert. Exec error=%s", err)
-			return
+			log.Fatalf("user insert. Exec error=%s", err)
 		}
 	}()
 	_, err := db.Exec(`INSERT INTO users (user_name) VALUES ("Bobby");`)
 	if err != nil {
-		fmt.Printf("user insert. Exec error=%s", err)
-		return
+		log.Fatalf("user insert. Exec error=%s", err)
 	}
 
 	// _, err = result.LastInsertId()
