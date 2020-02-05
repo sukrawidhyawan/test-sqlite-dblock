@@ -63,10 +63,12 @@ func main() {
 		// reads from products table, each read in separate go routine
 		for i := 0; i < count; i++ {
 			go func(i, count int) {
+				randomSleep()
 				read(db, mu, i, count)
 			}(i, count)
 
 			go func(i, count int) {
+				randomSleep()
 				read(db, mu, i, count)
 
 			}(i, count)
@@ -77,10 +79,12 @@ func main() {
 		// reads from products table, each read in separate go routine
 		for i := 0; i < count; i++ {
 			go func(i, count int) {
+				randomSleep()
 				read(db, mu, i, count)
 			}(i, count)
 
 			go func(i, count int) {
+				randomSleep()
 				read(db, mu, i, count)
 
 			}(i, count)
