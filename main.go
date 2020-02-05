@@ -41,9 +41,9 @@ func main() {
 	if err != nil {
 		log.Fatal("could not open sqlite3 database file", err)
 	}
-	db.SetMaxIdleConns(50)
+	db.SetMaxIdleConns(0)
 	// db.SetConnMaxLifetime(time.Hour / 2)
-	db.SetMaxOpenConns(15)
+	db.SetMaxOpenConns(40)
 	defer db.Close()
 	setup(db)
 
@@ -97,7 +97,7 @@ func main() {
 }
 
 func randomSleep() {
-	time.Sleep(time.Duration(r.Intn(5)) * time.Millisecond)
+	time.Sleep(time.Duration(r.Intn(3)) * time.Millisecond)
 }
 
 func setup(db *sql.DB) {
